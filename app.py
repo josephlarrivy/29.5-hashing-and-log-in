@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from forms import AddUserForm, UserForm
+from forms import AddUserForm, FeedbackForm, UserForm
 from models import connect_db, db, User, Feedback
 from sqlalchemy.exc import IntegrityError
 
@@ -19,7 +19,7 @@ toolbar = DebugToolbarExtension(app)
 
 @app.route('/')
 def home_page():
-    return redirect('/register')
+    return redirect('/login')
 
 @app.route('/register', methods=['GET', 'POST'])
 def show_register():
@@ -41,7 +41,7 @@ def show_register():
             form.username.errors.append('Username taken. Please choose a different username.')
             return render_template('register.html', form=form)
         session['username'] = new_user.username
-        return redirect('/secret')
+        return redirect('/login')
     return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,6 +79,25 @@ def show_user_details(username):
         flash('must log in or register to view')
         return redirect('/login')
     curr_user = User.query.get(username)
-    print(f'{curr_user}')
     if curr_user.username == session['username']:
-        return render_template('users/user.html', user=curr_user)
+        return render_template('users/user.html', user=curr_user, username=username)
+
+@app.route('/feedback/<username>/feedback', methods=['GET', 'POST'])
+def feedback_form(username):
+    if 'username' not in session or username != session['username']:
+        flash('must log in or register to view')
+        return redirect('/login')
+    
+    form = FeedbackForm()
+
+    if form.validate_on_submit():
+        title=form.title.data
+        content=form.content.data
+
+        fb=Feedback(title=title, content=content, username=username)
+        db.session.add(fb)
+        db.session.commit()
+
+        return redirect(f'/user/{username}')
+
+    return render_template('/feedback/feedback_form.html', form=form, username=username)
