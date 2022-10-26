@@ -9,6 +9,15 @@
     <li>{{user.email}}</li>
 </ul>
 
+<h1>Feedback</h1>
+
+<ul>
+    {% for feedback in user.feedback %}
+        <li>{{feedback.content}}</li>
+    {% endfor %}
+</ul>
+
+<a href="/feedback/{{username}}/feedback"><button>feedback</button></a>
 
 <a href="/logout"><button>Log Out</button></a>
 {% endblock %}

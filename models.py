@@ -1,4 +1,3 @@
-from re import U
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
@@ -36,6 +35,8 @@ class User(db.Model):
         else:
             return False
 
+    feedback = db.relationship('Feedback')
+
 class Feedback(db.Model):
 
     __tablename__ = 'feedback'
@@ -43,4 +44,8 @@ class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    username = db.Column(db.ForeignKey('users.username'), nullable=False)
+    username = db.Column(db.Text, db.ForeignKey('users.username'), nullable=False)
+
+    # does this relationship work right? is it set up right?
+    # user = db.relationship('User', backref="feedback", cascade="all,delete")
+    user = db.relationship('User')

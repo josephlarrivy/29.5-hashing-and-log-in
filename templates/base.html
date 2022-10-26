@@ -7,16 +7,22 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
-<br>
-<br>
-    {% block buttons %}
     <a href="/register"><button>register</button></a>
     <a href="/login"><button>login</button></a>
     <a href="/logout"><button>logout</button></a>
     <a href="/secret"><button>secret</button></a>
+    
+<br>
+<hr>
+<br>    
+    {% block content %}
     {% endblock %}
+<br>
+<br>
+    {% for msg in get_flashed_messages() %}
+        {{msg}}
+    {% endfor %}
+    
 
 </body>
 </html>

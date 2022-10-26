@@ -22,6 +22,14 @@ u2 = User(
     last_name = 'Doe'
     )
 
+# u3 = User(
+#     username='jill_doe',
+#     password='$2b$12$rSSb0VnaHT0bCIoNsN0x.uqHcgosYVQf4BjWzrKWfPx1tJrn5fPgi',
+#     email='jill_doe@test.com',
+#     first_name='Jill',
+#     last_name='Doe'
+# )
+
 f1 = Feedback(
     title = 'feedback1',
     content = 'feedback1 content',
@@ -33,6 +41,12 @@ f2 = Feedback(
     content='feedback2 content',
     username='jane_doe'
 )
+
+# f3 = Feedback(
+#     title='feedback3',
+#     content='feedback3 content',
+#     username='jill_doe'
+# )
 
 db.session.add_all([u1, u2])
 db.session.commit()
