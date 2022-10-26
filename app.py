@@ -101,3 +101,37 @@ def feedback_form(username):
         return redirect(f'/user/{username}')
 
     return render_template('/feedback/feedback_form.html', form=form, username=username)
+
+@app.route('/feedback/<username>/<int:feedback_id>/feedback_edit', methods=['GET', 'POST'])
+def edit_feedback(feedback_id, username):
+
+    if 'username' not in session or username != session['username']:
+        flash('must log in or register to view')
+        return redirect('/login')
+    
+    feedback = Feedback.query.get_or_404(feedback_id)
+    user = User.query.get(username)
+
+    form = FeedbackForm(obj=feedback)
+
+    if form.validate_on_submit():
+        feedback.title = form.title.data
+        feedback.content = form.content.data
+
+        db.session.commit()
+
+        return redirect('/feedback/<username>/feedback')
+    
+    return render_template('/feedback/feedback_edit.html', form=form, feedback=feedback, user=user, username=username, feedback_id=feedback_id)
+
+@app.route('/users/<username>/delete', methods=['GET', 'POST'])
+def delete_user(username):
+    if 'username' not in session or username != session['username']:
+        flash('must log in or register to view')
+        return redirect('/login')
+    
+    user = User.query.get_or_404(username)
+    db.session.delete(user)
+    db.session.commit()
+    session.pop('username')
+    return redirect('/register')

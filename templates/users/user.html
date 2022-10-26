@@ -2,22 +2,23 @@
 {% block title %}{{user.username}}{% endblock %}
 
 {% block content %}
-<h1>{{user.username}}</h1>
+<h1>User: {{user.username}}
+    <a href="/users/{{user.username}}/delete"><button>Delete User</button></a>
+</h1>
 
 <ul>
     <li>{{user.first_name}} {{user.last_name}}</li>
     <li>{{user.email}}</li>
 </ul>
-
 <h1>Feedback</h1>
 
-<ul>
-    {% for feedback in user.feedback %}
-        <li>{{feedback.content}}</li>
-    {% endfor %}
-</ul>
+{% for feedback in user.feedback %}
+    <h3>{{feedback.title}}</h3>
+    <a href="/feedback/{{user.username}}/{{feedback.id}}/feedback_edit"><button>Edit Feedback</button></a>
+    <p>{{feedback.content}}</p>
+{% endfor %}
 
-<a href="/feedback/{{username}}/feedback"><button>feedback</button></a>
 
+<a href="/feedback/{{user.username}}/feedback"><button>Submit Feedback</button></a>
 <a href="/logout"><button>Log Out</button></a>
 {% endblock %}
